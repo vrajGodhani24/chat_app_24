@@ -1,3 +1,4 @@
+import 'package:chat_app_24/controller/auth_controller.dart';
 import 'package:chat_app_24/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -17,8 +18,10 @@ class FireStoreHelper {
   }
 
   Future<List<QueryDocumentSnapshot>> fetchAllUserData() async {
-    QuerySnapshot querySnapshot =
-        await firebaseFirestore.collection('users').get();
+    QuerySnapshot querySnapshot = await firebaseFirestore
+        .collection('users')
+        .where("email", isNotEqualTo: AuthController.currentUser!.email)
+        .get();
 
     List<QueryDocumentSnapshot> data = querySnapshot.docs;
 
