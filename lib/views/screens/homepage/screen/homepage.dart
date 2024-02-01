@@ -1,7 +1,10 @@
 import 'package:chat_app_24/controller/auth_controller.dart';
+import 'package:chat_app_24/helper/auth_helper.dart';
+import 'package:chat_app_24/helper/firestore_helper.dart';
 import 'package:chat_app_24/utils/colors.dart';
 import 'package:chat_app_24/utils/strings.dart';
 import 'package:chat_app_24/views/screens/homepage/controller/homepage_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,6 +58,14 @@ class _HomePageState extends State<HomePage> {
                   homePageController.fetchedAllUserData
                       .map((e) => Card(
                             child: ListTile(
+                              onTap: () {
+                                FireStoreHelper.fireStoreHelper
+                                    .createChatRoomId(
+                                  AuthController.currentUser!.email!,
+                                  e.email,
+                                );
+                                Get.toNamed('chat', arguments: e);
+                              },
                               leading: const FlutterLogo(size: 45),
                               title: Text(e.name),
                               subtitle: Text(e.email),

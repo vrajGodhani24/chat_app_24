@@ -16,6 +16,7 @@ class HomePageController extends GetxController {
     for (var element in data) {
       fetchedAllUserData.add(
         UserData(
+            id: element['id'],
             name: element['name'],
             email: element['email'],
             password: element['password']),

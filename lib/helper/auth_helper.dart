@@ -17,10 +17,11 @@ class AuthHelper {
   Future<String?> signUpUserWithEmailAndPassword(
       {required String email, required String password}) async {
     try {
-      await firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
 
       UserData userData = UserData(
+          id: userCredential.user!.uid,
           name: "${email.split("@")[0].capitalizeFirst}",
           email: email,
           password: password);

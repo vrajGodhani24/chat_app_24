@@ -3,4 +3,6 @@ import 'package:get/get.dart';
 
 class AuthController extends GetxController {
   static User? currentUser;
+
+  static String currentChatRoomId = "";
 }
