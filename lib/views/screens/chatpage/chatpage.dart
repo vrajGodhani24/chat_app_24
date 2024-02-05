@@ -12,6 +12,11 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     UserData userData = ModalRoute.of(context)!.settings.arguments as UserData;
 
@@ -21,6 +26,14 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(userData.name),
         elevation: 3,
+        leading: IconButton(
+            onPressed: () {
+              setState(() {
+                FireStoreHelper.fireStoreHelper.fetchedMessageData = [];
+              });
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(Icons.arrow_back)),
       ),
       body: Container(
         padding: const EdgeInsets.all(12),
@@ -28,7 +41,21 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               flex: 12,
-              child: Container(),
+              child: ListView(
+                children: FireStoreHelper.fireStoreHelper.fetchedMessageData
+                    .map(
+                      (e) => Row(
+                        children: [
+                          Chip(
+                              label: Text(
+                            e.message,
+                            style: const TextStyle(fontSize: 15),
+                          )),
+                        ],
+                      ),
+                    )
+                    .toList(),
+              ),
             ),
             Expanded(
               child: Row(
@@ -55,6 +82,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             .then((value) {
                           messageController.clear();
                         });
+                        FireStoreHelper.fireStoreHelper.fetchedMessageData =
+                            await FireStoreHelper.fireStoreHelper.getMessages();
+                        setState(() {});
                       },
                       elevation: 0,
                       child: const Icon(Icons.send),
