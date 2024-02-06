@@ -1,6 +1,7 @@
 import 'package:chat_app_24/controller/auth_controller.dart';
 import 'package:chat_app_24/helper/auth_helper.dart';
 import 'package:chat_app_24/helper/firestore_helper.dart';
+import 'package:chat_app_24/model/getmessages.dart';
 import 'package:chat_app_24/utils/colors.dart';
 import 'package:chat_app_24/utils/strings.dart';
 import 'package:chat_app_24/views/screens/homepage/controller/homepage_controller.dart';
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                       .map((e) => Card(
                             child: ListTile(
                               onTap: () async {
-                                FireStoreHelper.fireStoreHelper
+                                await FireStoreHelper.fireStoreHelper
                                     .createChatRoomId(
                                   AuthController.currentUser!.email!,
                                   e.email,

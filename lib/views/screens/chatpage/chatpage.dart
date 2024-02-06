@@ -12,11 +12,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     UserData userData = ModalRoute.of(context)!.settings.arguments as UserData;
 
@@ -28,9 +23,6 @@ class _ChatScreenState extends State<ChatScreen> {
         elevation: 3,
         leading: IconButton(
             onPressed: () {
-              setState(() {
-                FireStoreHelper.fireStoreHelper.fetchedMessageData = [];
-              });
               Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_back)),
@@ -42,15 +34,36 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               flex: 12,
               child: ListView(
-                children: FireStoreHelper.fireStoreHelper.fetchedMessageData
+                children: FireStoreHelper.fireStoreHelper.fetchedMessages
                     .map(
                       (e) => Row(
+                        mainAxisAlignment:
+                            (e.sender == AuthController.currentUser!.email)
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
                         children: [
-                          Chip(
-                              label: Text(
-                            e.message,
-                            style: const TextStyle(fontSize: 15),
-                          )),
+                          Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Chip(
+                              label: Column(
+                                crossAxisAlignment: (e.sender ==
+                                        AuthController.currentUser!.email)
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    e.message,
+                                    style: const TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    '${e.time.toDate().hour}:${e.time.toDate().minute}',
+                                    style: const TextStyle(
+                                        fontSize: 12, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     )
@@ -82,8 +95,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             .then((value) {
                           messageController.clear();
                         });
-                        FireStoreHelper.fireStoreHelper.fetchedMessageData =
-                            await FireStoreHelper.fireStoreHelper.getMessages();
+
                         setState(() {});
                       },
                       elevation: 0,
