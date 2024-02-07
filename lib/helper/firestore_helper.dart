@@ -1,9 +1,7 @@
 import 'package:chat_app_24/controller/auth_controller.dart';
 import 'package:chat_app_24/model/fetchChatRoomUsers.dart';
-import 'package:chat_app_24/model/getmessages.dart';
 import 'package:chat_app_24/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 
 class FireStoreHelper {
   FireStoreHelper._();
@@ -11,8 +9,6 @@ class FireStoreHelper {
   static final FireStoreHelper fireStoreHelper = FireStoreHelper._();
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
-  List<GetMessageData> fetchedMessages = [];
 
   Future<void> addUserInFireStoreDatabase(UserData userData) async {
     await firebaseFirestore.collection('users').doc().set({
@@ -98,24 +94,15 @@ class FireStoreHelper {
         print("----------_____________");
       }
     }
-
-    await getMessages();
   }
 
-  Future<void> getMessages() async {
-    QuerySnapshot querySnapshot = await firebaseFirestore
+  Stream<QuerySnapshot<Map<String, dynamic>>> getMessages() {
+    return firebaseFirestore
         .collection('chats')
         .doc(AuthController.currentChatRoomId)
         .collection('messages')
         .orderBy('time', descending: false)
-        .get();
-
-    List<QueryDocumentSnapshot> data = querySnapshot.docs;
-
-    fetchedMessages = data
-        .map((e) => GetMessageData(
-            message: e['message'], time: e['time'], sender: e['sender']))
-        .toList();
+        .snapshots();
   }
 
   Future<void> sendMessage(
@@ -131,6 +118,5 @@ class FireStoreHelper {
       'message': message,
       'time': DateTime.now(),
     });
-    await getMessages();
   }
 }
