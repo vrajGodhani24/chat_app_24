@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:chat_app_24/controller/auth_controller.dart';
 import 'package:chat_app_24/model/fetchChatRoomUsers.dart';
 import 'package:chat_app_24/model/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FireStoreHelper {
   FireStoreHelper._();
@@ -9,6 +13,8 @@ class FireStoreHelper {
   static final FireStoreHelper fireStoreHelper = FireStoreHelper._();
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  File? imageFile;
 
   Future<void> addUserInFireStoreDatabase(UserData userData) async {
     await firebaseFirestore.collection('users').doc().set({
@@ -118,5 +124,30 @@ class FireStoreHelper {
       'message': message,
       'time': DateTime.now(),
     });
+  }
+
+  Future getImage() async {
+    ImagePicker imagePicker = ImagePicker();
+
+    XFile? xFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (xFile != null) {
+      imageFile = File(xFile.path);
+      uploadImage();
+    }
+  }
+
+  Future uploadImage() async {
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+
+    String path = DateTime.now().microsecond.toString();
+
+    Reference ref = firebaseStorage.ref().child("images").child('$path.jpg');
+
+    TaskSnapshot uploadTask = await ref.putFile(imageFile!);
+
+    String imageUrl = await uploadTask.ref.getDownloadURL();
+
+    print(imageUrl);
   }
 }

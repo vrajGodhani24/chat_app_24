@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:chat_app_24/controller/auth_controller.dart';
 import 'package:chat_app_24/helper/firestore_helper.dart';
 import 'package:chat_app_24/model/getmessages.dart';
 import 'package:chat_app_24/model/user_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -140,7 +137,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            flex: 6,
+                            flex: 5,
                             child: TextField(
                               controller: messageController,
                               decoration: InputDecoration(
@@ -149,6 +146,15 @@ class _ChatScreenState extends State<ChatScreen> {
                                 ),
                                 hintText: "Enter message",
                               ),
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          Expanded(
+                            child: FloatingActionButton(
+                              onPressed: () =>
+                                  FireStoreHelper.fireStoreHelper.getImage(),
+                              elevation: 0,
+                              child: const Icon(Icons.image),
                             ),
                           ),
                           const SizedBox(width: 5),
