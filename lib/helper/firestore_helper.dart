@@ -15,6 +15,7 @@ class FireStoreHelper {
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   File? imageFile;
+  String? imageUrl;
 
   Future<void> addUserInFireStoreDatabase(UserData userData) async {
     await firebaseFirestore.collection('users').doc().set({
@@ -111,25 +112,10 @@ class FireStoreHelper {
         .snapshots();
   }
 
-  Future<void> sendMessage(
-      String sender, String receiver, String message) async {
-    firebaseFirestore
-        .collection('chats')
-        .doc(AuthController.currentChatRoomId)
-        .collection('messages')
-        .doc()
-        .set({
-      'sender': sender,
-      'receiver': receiver,
-      'message': message,
-      'time': DateTime.now(),
-    });
-  }
-
   Future getImage() async {
     ImagePicker imagePicker = ImagePicker();
 
-    XFile? xFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    XFile? xFile = await imagePicker.pickImage(source: ImageSource.camera);
 
     if (xFile != null) {
       imageFile = File(xFile.path);
@@ -146,8 +132,24 @@ class FireStoreHelper {
 
     TaskSnapshot uploadTask = await ref.putFile(imageFile!);
 
-    String imageUrl = await uploadTask.ref.getDownloadURL();
+    imageUrl = await uploadTask.ref.getDownloadURL();
 
     print(imageUrl);
+  }
+
+  Future<void> sendMessage(
+      String sender, String receiver, String message) async {
+    firebaseFirestore
+        .collection('chats')
+        .doc(AuthController.currentChatRoomId)
+        .collection('messages')
+        .doc()
+        .set({
+      'sender': sender,
+      'receiver': receiver,
+      'type': (imageUrl != null) ? 'img' : 'text',
+      'message': message,
+      'time': DateTime.now(),
+    });
   }
 }

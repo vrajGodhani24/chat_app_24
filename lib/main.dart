@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/splash', page: () => const SplashScreen()),
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/chat', page: () => const ChatScreen()),
+        GetPage(name: '/pickedImage', page: () => const PickedImageView()),
       ],
     );
   }
