@@ -4,6 +4,7 @@ import 'package:chat_app_24/model/getmessages.dart';
 import 'package:chat_app_24/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -25,6 +26,22 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(userData.name),
         elevation: 3,
+        actions: [
+          Transform.scale(
+            scale: 0.5,
+            child: ZegoSendCallInvitationButton(
+              isVideoCall: true,
+              resourceID:
+                  "zegouikit_call", //You need to use the resourceID that you created in the subsequent steps. Please continue reading this document.
+              invitees: [
+                ZegoUIKitUser(
+                  id: userData.email,
+                  name: userData.email,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: Container(
         padding: const EdgeInsets.all(12),

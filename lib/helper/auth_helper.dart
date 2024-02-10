@@ -6,6 +6,8 @@ import 'package:chat_app_24/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class AuthHelper {
   AuthHelper._();
@@ -54,6 +56,15 @@ class AuthHelper {
         return 'Invalid Credential';
       }
     }
+
+    ZegoUIKitPrebuiltCallInvitationService().init(
+      appID: 1182374150 /*input your AppID*/,
+      appSign:
+          "29ca099d06f61e312d8feb34e335f1bb539e0ea4f800e291a0b45fdfdcdbc743" /*input your AppSign*/,
+      userID: AuthController.currentUser!.email!,
+      userName: AuthController.currentUser!.email!,
+      plugins: [ZegoUIKitSignalingPlugin()],
+    );
     return null;
   }
 

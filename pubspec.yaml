@@ -44,6 +44,8 @@ dependencies:
   cloud_firestore:
   image_picker:
   firebase_storage:
+  zego_uikit_prebuilt_call:
+  zego_uikit_signaling_plugin:
 
 dev_dependencies:
   flutter_test:
